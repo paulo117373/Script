@@ -1,0 +1,221 @@
+-- Hitbox Expander + Interface Inicial (PhS) com botão móvel (Delta Executor)
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+-- Botão inicial PhS
+local intro = Instance.new("ScreenGui", game.CoreGui)
+local button = Instance.new("TextButton", intro)
+button.Size = UDim2.new(0, 60, 0, 60)
+button.Position = UDim2.new(0, 10, 0, 10)
+button.BackgroundColor3 = Color3.fromRGB(0, 100, 255)
+button.Text = "PhS"
+button.TextColor3 = Color3.new(1, 1, 1)
+button.Font = Enum.Font.SourceSansBold
+button.TextScaled = true
+
+local uicorner = Instance.new("UICorner", button)
+uicorner.CornerRadius = UDim.new(0, 15)
+
+-- Interface do painel
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Enabled = false
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 200, 0, 150)
+frame.Position = UDim2.new(0, 80, 0, 10)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+
+local uicorner2 = Instance.new("UICorner", frame)
+uicorner2.CornerRadius = UDim.new(0, 20)
+
+local toggle = Instance.new("TextButton", frame)
+toggle.Size = UDim2.new(1, -20, 0, 50)
+toggle.Position = UDim2.new(0, 10, 0, 50)
+toggle.Text = "Ativar Hitbox"
+toggle.TextColor3 = Color3.new(1, 1, 1)
+toggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+toggle.Font = Enum.Font.SourceSansBold
+toggle.TextSize = 16
+
+local uicorner3 = Instance.new("UICorner", toggle)
+uicorner3.CornerRadius = UDim.new(0, 15)
+
+local ativo = false
+
+-- Mostrar/ocultar GUI
+button.MouseButton1Click:Connect(function()
+	gui.Enabled = not gui.Enabled
+end)
+
+-- Alternar Hitbox
+toggle.MouseButton1Click:Connect(function()
+	ativo = not ativo
+	toggle.Text = ativo and "Desativar Hitbox" or "Ativar Hitbox"
+end)
+
+-- Função de Hitbox
+RunService.Stepped:Connect(function()
+	for _, p in pairs(Players:GetPlayers()) do
+		if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+			local hrp = p.Character.HumanoidRootPart
+			if ativo then
+				hrp.Size = Vector3.new(20, 20, 20)
+				hrp.Transparency = 0.5
+				hrp.CanCollide = false
+				hrp.BrickColor = BrickColor.new("Bright red")
+			else
+				hrp.Size = Vector3.new(2, 2, 1)
+				hrp.Transparency = 1
+			end
+		end
+	end
+end)
+
+-- Função para mover o botão "PhS"
+local dragging = false
+local dragInput, dragStart, startPos
+
+button.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = button.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+button.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement then
+		dragInput = input
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		local delta = input.Position - dragStart
+		button.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+end)-- Hitbox Expander + Interface Inicial (PhS) com botão móvel (Delta Executor)
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+-- Botão inicial PhS
+local intro = Instance.new("ScreenGui", game.CoreGui)
+local button = Instance.new("TextButton", intro)
+button.Size = UDim2.new(0, 60, 0, 60)
+button.Position = UDim2.new(0, 10, 0, 10)
+button.BackgroundColor3 = Color3.fromRGB(0, 100, 255)
+button.Text = "PhS"
+button.TextColor3 = Color3.new(1, 1, 1)
+button.Font = Enum.Font.SourceSansBold
+button.TextScaled = true
+
+local uicorner = Instance.new("UICorner", button)
+uicorner.CornerRadius = UDim.new(0, 15)
+
+-- Interface do painel
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Enabled = false
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 200, 0, 150)
+frame.Position = UDim2.new(0, 80, 0, 10)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+
+local uicorner2 = Instance.new("UICorner", frame)
+uicorner2.CornerRadius = UDim.new(0, 20)
+
+local toggle = Instance.new("TextButton", frame)
+toggle.Size = UDim2.new(1, -20, 0, 50)
+toggle.Position = UDim2.new(0, 10, 0, 50)
+toggle.Text = "Ativar Hitbox"
+toggle.TextColor3 = Color3.new(1, 1, 1)
+toggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+toggle.Font = Enum.Font.SourceSansBold
+toggle.TextSize = 16
+
+local uicorner3 = Instance.new("UICorner", toggle)
+uicorner3.CornerRadius = UDim.new(0, 15)
+
+local ativo = false
+
+-- Mostrar/ocultar GUI
+button.MouseButton1Click:Connect(function()
+	gui.Enabled = not gui.Enabled
+end)
+
+-- Alternar Hitbox
+toggle.MouseButton1Click:Connect(function()
+	ativo = not ativo
+	toggle.Text = ativo and "Desativar Hitbox" or "Ativar Hitbox"
+end)
+
+-- Função de Hitbox
+RunService.Stepped:Connect(function()
+	for _, p in pairs(Players:GetPlayers()) do
+		if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+			local hrp = p.Character.HumanoidRootPart
+			if ativo then
+				hrp.Size = Vector3.new(20, 20, 20)
+				hrp.Transparency = 0.5
+				hrp.CanCollide = false
+				hrp.BrickColor = BrickColor.new("Bright red")
+			else
+				hrp.Size = Vector3.new(2, 2, 1)
+				hrp.Transparency = 1
+			end
+		end
+	end
+end)
+
+-- Função para mover o botão "PhS"
+local dragging = false
+local dragInput, dragStart, startPos
+
+button.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = button.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+button.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement then
+		dragInput = input
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		local delta = input.Position - dragStart
+		button.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+end)
